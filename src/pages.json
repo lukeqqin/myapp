@@ -1,0 +1,67 @@
+{
+  "easycom": {
+    "custom": {
+      "^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "z-paging/components/z-paging$1/z-paging$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index"
+    },
+    {
+      "path": "pages/release/release"
+    },
+    {
+      "path": "pages/user/user"
+    },
+    {
+      "path": "pages/artists/artists"
+    },
+    {
+      "path": "pages/message/message"
+    }
+  ],
+  "globalStyle": {
+    "backgroundColorTop":"#FFFFFF",
+    "navigationBarTitleText": "",
+    "navigationStyle": "custom"
+  },
+  "uniIdRouter": {},
+  "tabBar": {
+    "color": "#cdcdcd",
+    "selectedColor": "#6134af",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "/static/images/tab-bar/home.png",
+        "selectedIconPath": "/static/images/tab-bar/home_active.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/artists/artists",
+        "iconPath": "/static/images/tab-bar/family.png",
+        "selectedIconPath": "/static/images/tab-bar/family_active.png",
+        "text": "家谱"
+      },
+      {
+        "pagePath": "pages/release/release",
+        "iconPath": "/static/images/tab-bar/message.png",
+        "selectedIconPath": "/static/images/tab-bar/message_active.png",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "iconPath": "/static/images/tab-bar/contacts.png",
+        "selectedIconPath": "/static/images/tab-bar/contacts_active.png",
+        "text": "人脉"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "/static/images/tab-bar/my.png",
+        "selectedIconPath": "/static/images/tab-bar/my_active.png",
+        "text": "我的"
+      }
+    ]
+  }
+
+}
