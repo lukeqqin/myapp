@@ -1,10 +1,11 @@
 <template>
     <view class="page_main">
+
         <view class="page_main_header">
             <view class="header">
-                <uni-easyinput :styles="styles" v-model="value" trim="true" primaryColor="#c8c7cc"
+                <UniEasyinput :styles="styles" v-model="value" trim="true" primaryColor="#c8c7cc"
                                prefixIcon="search" placeholder="搜索家谱、个人"
-                               placeholder-style="color:#cdcdcd;font-size:34rpx"></uni-easyinput>
+                               placeholder-style="color:#cdcdcd;font-size:34rpx"></UniEasyinput>
 
             </view>
             <view class="page_content">
@@ -81,6 +82,7 @@ const dataSource = [{
 const scrollItemEmitsClick = (item: object, index: number, arr: object[]) => {
     console.log(item, index, arr, 1)
 }
+
 const styles = {
     color: '#999',
     backgroundColor: 'white',
@@ -113,7 +115,6 @@ const styles = {
     padding: realSize(30px);
   }
 }
-
 
 
 .page_content {

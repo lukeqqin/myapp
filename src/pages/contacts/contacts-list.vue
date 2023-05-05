@@ -10,20 +10,24 @@
                         <view class="title">
                             <text>{{ item.title }}</text>
                         </view>
-                        <view class="summary">
-                            <expandable-text :line="1" expandText="展开" foldText="收起">
-                                简介：{{ item.summary }}
-                            </expandable-text>
+                        <view class="tags">
+                            <text v-for="(tag,i) in tags" class="tag" :style="{color:item.subColor}">{{ tag.name }}</text>
                         </view>
+                        <!--                        <view class="summary">-->
+                        <!--                            <expandable-text :line="1" expandText="展开" foldText="收起">-->
+                        <!--                                简介：{{ item.summary }}-->
+                        <!--                            </expandable-text>-->
+                        <!--                        </view>-->
                         <view class="people">
                             <image class="people_logo" src="/static/images/bot.png"></image>
-                            <text class="people_name" :style="{color:item.subColor}">姓名</text>
-                            <image class="people_total_logo" src="@/static/images/people_total.png"></image>
+                            <text class="people_name" :style="{color:item.subColor}">欧阳山峰</text>
+                            <image class="people_total_logo" src="@/static/images/hot.png"></image>
                             <view class="people_total"> {{ count }}</view>
-
+                            <image class="join_logo" src="/static/images/join.png"></image>
+                            <text class="join_name" :style="{color:item.subColor}">加入</text>
                         </view>
 
-                        <image class="join" src="/static/images/join.png"></image>
+
                     </view>
                 </view>
             </view>
@@ -37,6 +41,17 @@ import {ref} from 'vue';
 import ExpandableText from "@/components/expandable-text/expandable-text.vue";
 
 const count = 20
+const tags = [{
+    name: "标题名称a"
+}, {
+    name: "标题名称b"
+}, {
+    name: "标题名称c"
+}, {
+    name: "标题名称d"
+}, {
+    name: "标题名称e"
+}]
 const records = [{
     title: '测试数据',
     summary: '小A测试数据测试数据测试数据测试数据测试数据',
@@ -129,29 +144,41 @@ const queryList = (pageNo, pageSize) => {
 
 
 .slider {
-  width: 100%;
+  width: 96%;
   background-color: white;
+  margin: auto;
+  border-radius: 8px;
 
   .item {
-    margin: 15rpx 15rpx 15rpx 15rpx;
-    height: 125px;
-    border-radius: 10px;
+    margin: 15rpx 0rpx 0rpx 15rpx;
+    height: 210rpx;
     display: flex;
     flex-direction: row;
 
     .item_content {
 
       .title {
-        width: 300rpx;
-        margin: -120px 30rpx 20rpx 300rpx;
+        margin: -124px 30rpx 20rpx 270rpx;
         font-size: 1.2rem;
       }
 
-      .summary {
+
+      .tags {
         font-size: 13px;
-        color: rgba(79, 103, 101, 1);
         margin: 0 300rpx;
-        width: 400rpx;
+        display: flex;
+      }
+
+      .tag {
+          width: 60px;
+          font-size: 10px;
+          border-radius:5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(0deg, rgba(10, 255, 214, 1) 0%, rgba(255, 255, 259, 1) 100%);
+          //-webkit-background-clip: text;
+          //-webkit-text-fill-color: transparent;
       }
 
       .image {
@@ -162,7 +189,7 @@ const queryList = (pageNo, pageSize) => {
 
       .people {
         display: flex;
-        margin: 20rpx 0rpx 0rpx 300rpx;
+        margin: 40rpx 10rpx 10rpx 270rpx;
 
         .people_logo {
           background-color: red;
@@ -172,9 +199,9 @@ const queryList = (pageNo, pageSize) => {
         }
 
         .people_name {
-          width: 40px;
+          width: auto;
           font-size: 14px;
-          margin-left: 4rpx;
+          margin-left: 10rpx;
           background: rgba(255, 255, 255, 0.4);
           border-radius: 5px;
           display: flex;
@@ -183,25 +210,32 @@ const queryList = (pageNo, pageSize) => {
         }
 
         .people_total_logo {
-          width: 50rpx;
-          height: 50rpx;
+          width: 44rpx;
+          height: 44rpx;
           margin-left: 40rpx;
         }
 
         .people_total {
-          width: 50rpx;
-          height: 50rpx;
           margin-left: 10rpx;
+          margin-top: 10rpx;
+          font-size: 14px;
+          color: rgba(79, 103, 101, 1);
         }
+
+        .join_logo {
+          margin-left: 40rpx;
+          width: 48rpx;
+          height: 48rpx;
+        }
+
+        .join_name {
+          margin-left: 10rpx;
+          margin-top: 8rpx;
+          font-size: 14px;
+        }
+
       }
 
-      .join {
-        margin: -50rpx 0rpx 0rpx 600rpx;
-        width: 40rpx;
-        display: flex;
-        height: 40rpx;
-        font-size: 14px;
-      }
     }
   }
 }
