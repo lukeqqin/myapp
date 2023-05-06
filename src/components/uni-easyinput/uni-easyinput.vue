@@ -538,7 +538,7 @@ $uni-border-1: #dcdfe6 !default;
 	overflow: hidden;
 	flex: 1;
 	line-height: 1;
-	font-size: 14px;
+	font-size: 16px;
 	height: 35px;
 	// min-height: 36px;
 }
@@ -591,12 +591,12 @@ $uni-border-1: #dcdfe6 !default;
 	/* #ifndef APP-NVUE */
 	display: flex;
 	box-sizing: border-box;
-	height: 80rpx;
+	height: 76rpx;
 	/* #endif */
 	flex-direction: row;
 	align-items: center;
 	border: 1px solid $uni-border-1;
-	border-radius: 50px;
+	border-radius: 20px;
 	/* #ifdef MP-ALIPAY */
 	overflow: hidden;
 	/* #endif */

@@ -3,9 +3,9 @@
 
         <view class="page_main_header">
             <view class="header">
-                <UniEasyinput :styles="styles" v-model="value" trim="true" primaryColor="#c8c7cc"
+                <UniEasyinput :styles="styles" v-model="value" trim="true" primaryColor="#FFFFFF"
                                prefixIcon="search" placeholder="搜索家谱、个人"
-                               placeholder-style="color:#cdcdcd;font-size:34rpx"></UniEasyinput>
+                               placeholder-style="color:#cdcdcd;font-size:30rpx;font-weight:300;"></UniEasyinput>
 
             </view>
             <view class="page_content">
@@ -85,7 +85,7 @@ const scrollItemEmitsClick = (item: object, index: number, arr: object[]) => {
 
 const styles = {
     color: '#999',
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     disableColor: '#e5e5e5',
     borderColor: '#e5e5e5',
 }
@@ -103,10 +103,10 @@ const styles = {
 
 .page_main_header {
   padding-top: realSize(120px);
-  //background-color: #00CED1;
+  //background-color: #37C2BC;
   width: 100%;
-  height: realSize(575rpx);
-  background-image: linear-gradient(to bottom, rgba(0, 206, 209, 1), rgba(0, 206, 209, 0));
+  height: realSize(535rpx);
+  background-image: linear-gradient(to bottom, rgba(51, 179, 174, 1), rgba(76, 204, 199, 0));
 
   .header {
     display: flex;

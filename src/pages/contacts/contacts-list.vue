@@ -7,24 +7,24 @@
                 <view class="item">
                     <view class="item_content">
                         <image class="image" :src="item.icon"></image>
-                        <view class="title">
-                            <text>{{ item.title }}</text>
-                        </view>
-                        <view class="tags">
-                            <text v-for="(tag,i) in tags" class="tag" :style="{color:item.subColor}">{{ tag.name }}</text>
-                        </view>
-                        <!--                        <view class="summary">-->
-                        <!--                            <expandable-text :line="1" expandText="展开" foldText="收起">-->
-                        <!--                                简介：{{ item.summary }}-->
-                        <!--                            </expandable-text>-->
-                        <!--                        </view>-->
-                        <view class="people">
-                            <image class="people_logo" src="/static/images/bot.png"></image>
-                            <text class="people_name" :style="{color:item.subColor}">欧阳山峰</text>
-                            <image class="people_total_logo" src="@/static/images/hot.png"></image>
-                            <view class="people_total"> {{ count }}</view>
-                            <image class="join_logo" src="/static/images/join.png"></image>
-                            <text class="join_name" :style="{color:item.subColor}">加入</text>
+                        <view class="left">
+                            <view class="title">
+                                <text>{{ item.title }}</text>
+                            </view>
+                            <view class="tags">
+                                <text v-for="(tag,i) in tags" class="tag">
+                                    {{ tag.name }}
+                                </text>
+                            </view>
+
+                            <view class="people">
+                                <image class="people_logo" src="/static/images/default_avatar.png"></image>
+                                <text class="people_name" :style="{color:item.subColor}">欧阳山峰</text>
+                                <image class="people_total_logo" src="@/static/images/hot.png"></image>
+                                <view class="people_total"> {{ count }}</view>
+                                <image class="join_logo" src="/static/images/join.png"></image>
+                                <text class="join_name" :style="{color:item.subColor}">加入</text>
+                            </view>
                         </view>
 
 
@@ -47,10 +47,6 @@ const tags = [{
     name: "标题名称b"
 }, {
     name: "标题名称c"
-}, {
-    name: "标题名称d"
-}, {
-    name: "标题名称e"
 }]
 const records = [{
     title: '测试数据',
@@ -145,56 +141,59 @@ const queryList = (pageNo, pageSize) => {
 
 .slider {
   width: 96%;
-  background-color: white;
+  background-color: snow;
   margin: auto;
   border-radius: 8px;
 
   .item {
     margin: 15rpx 0rpx 0rpx 15rpx;
-    height: 210rpx;
-    display: flex;
-    flex-direction: row;
 
     .item_content {
+      display: flex;
 
-      .title {
-        margin: -124px 30rpx 20rpx 270rpx;
-        font-size: 1.2rem;
-      }
+      .left {
+        .title {
+          margin-top: 10rpx;
+          font-size: 1.2rem;
+        }
 
-
-      .tags {
-        font-size: 13px;
-        margin: 0 300rpx;
-        display: flex;
-      }
-
-      .tag {
-          width: 60px;
-          font-size: 10px;
-          border-radius:5px;
+        .tags {
+          font-size: 14px;
+          font-weight: 330;
+          color: black;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(0deg, rgba(10, 255, 214, 1) 0%, rgba(255, 255, 259, 1) 100%);
-          //-webkit-background-clip: text;
-          //-webkit-text-fill-color: transparent;
+          margin-top: 20rpx;
+
+          .tag {
+            border-radius: 5px;
+            color: rgba(79, 103, 101, 1);
+            background: #F6F6F6;
+
+            &:not(:first-of-type) {
+              margin-left: 20rpx;
+            }
+          }
+        }
+
+
       }
 
       .image {
-        width: 230rpx;
+        width: 260rpx;
         height: 196rpx;
-        margin: 10rpx 0rpx 22rpx 0rpx;
+        margin-top: 10rpx;
+        margin-bottom: 10rpx;
+        margin-right: 20rpx;
       }
+
 
       .people {
         display: flex;
-        margin: 40rpx 10rpx 10rpx 270rpx;
+        margin-top: 40rpx;
 
         .people_logo {
-          background-color: red;
-          width: 40rpx;
-          height: 40rpx;
+          width: 44rpx;
+          height: 44rpx;
           border-radius: 50%;
         }
 
