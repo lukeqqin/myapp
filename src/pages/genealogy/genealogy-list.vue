@@ -6,14 +6,14 @@
             <view class="slider" v-for="(item,index) in dataList">
                 <view class="item">
                     <view class="item_content">
-                        <image class="image" :src="item.icon"></image>
+                        <image class="image" :src="item.Avatar"></image>
                         <view class="left">
                             <view class="title">
-                                <text>{{ item.title }}</text>
+                                <text>{{ item.Title }}</text>
                             </view>
                             <view class="tags">
-                                <text v-for="(tag,i) in tags" class="tag">
-                                    {{ tag.name }}
+                                <text v-for="(tag,i) in item.Tags" class="tag">
+                                    {{ tag }}
                                 </text>
                             </view>
 
@@ -33,13 +33,16 @@
             </view>
 
         </z-paging>
+
+
     </view>
 </template>
 
 <script setup>
 import {ref} from 'vue';
-import ExpandableText from "@/components/expandable-text/expandable-text.vue";
+import {useMainStore} from "@/store/myapp";
 
+const mainStore = useMainStore()
 const count = 20
 const tags = [{
     name: "标题名称a"
@@ -112,20 +115,29 @@ const records = [{
 const paging = ref(null)
 let dataList = ref([])
 
-
 // @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
 const queryList = (pageNo, pageSize) => {
-    // // 此处请求仅为演示，请替换为自己项目中的请求
-    // request.queryList({pageNo, pageSize}).then(res => {
-    //     // 将请求结果通过complete传给z-paging处理，同时也代表请求结束，这一行必须调用
-    //     paging.value.complete(res.data.list);
-    // })
-    console.log(pageNo, pageSize)
-    console.log(records)
-    setTimeout(() => {
+    let offset = pageNo * pageSize - pageSize
+    uni.request({
+        url: mainStore.host + "/genealogy/assemble",
+        method: "POST",
+        data: {
+            "limit": pageSize,
+            "offset": offset,
+            "title": ""
+        },
+        complete: function (res) {
+            console.log(res)
+            if (res.data.Code === 200) {
+                console.log(res.data.Data.Genealogies)
+                paging.value.complete(res.data.Data.Genealogies);
+            } else {
+                paging.value.complete(false);
+            }
 
-        paging.value.complete(records);
+        }
     })
+
 }
 </script>
 <style lang="scss" scoped>
@@ -135,13 +147,13 @@ const queryList = (pageNo, pageSize) => {
   align-items: center;
   width: 100%;
   margin-top: -20rpx;
-  background-color: #F5F5F5;
+  background-color: #f2f2f3;
 }
 
 
 .slider {
   width: 96%;
-  background-color: snow;
+  background-color: white;
   margin: auto;
   border-radius: 8px;
 

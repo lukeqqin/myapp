@@ -2,85 +2,109 @@
     <view class="page_main">
 
         <view class="page_main_header">
-            <view class="header">
-                <UniEasyinput :styles="styles" v-model="value" trim="true" primaryColor="#FFFFFF"
-                               prefixIcon="search" placeholder="搜索家谱、个人"
-                               placeholder-style="color:#cdcdcd;font-size:30rpx;font-weight:300;"></UniEasyinput>
+            <uni-search-bar @confirm="search" :focus="true" v-model="searchValue" @blur="blur" @focus="focus"
+                            @input="input"
+                            @cancel="cancel" @clear="clear" placeholder="搜索家谱名称" cancelButton="none">
+            </uni-search-bar>
 
-            </view>
-            <view class="page_content">
-                <view class="menu">
-                    <mxio-scroll-x :dataSource="dataSource" :barWidth="barWidth" :colList="11" :column="0"
-                                   :barShow="barShow"
-                                   @scrollItemEmitsClick="scrollItemEmitsClick">
-                    </mxio-scroll-x>
-                </view>
-            </view>
         </view>
-        <ContactsList></ContactsList>
+        <view class="more">
+            <uni-group mode="card" top="0">
+                <!--                <mxio-scroll-x :dataSource="dataSource" :barWidth="barWidth" :colList="11" :column="0"-->
+                <!--                               :barShow="barShow"-->
+                <!--                               @scrollItemEmitsClick="scrollItemEmitsClick">-->
+                <!--                </mxio-scroll-x>-->
+                <u-scroll-list @right="right" @left="left">
+                    <view class="scroll-list" style="flex-direction: row;">
+                        <view class="scroll-list__goods-item" v-for="(item, index) in list" :key="index">
+                            <image class="scroll-list__goods-item__image" :src="item.thumb"></image>
+                            <text class="scroll-list__goods-item__text">￥{{ item.price }}</text>
+                        </view>
+                        <!--                        <view class="scroll-list__show-more">-->
+                        <!--                            <text class="scroll-list__show-more__text">查看更多</text>-->
+                        <!--                            <u-icon name="arrow-leftward" color="#f56c6c" size="12"></u-icon>-->
+                        <!--                        </view>-->
+                    </view>
+                </u-scroll-list>
+            </uni-group>
+        </view>
+        <view>
+            <u-image :showLoading="true" :src="src" width="80px" height="80px" @click="click"></u-image>
+        </view>
+
+
+        <!--        <genealogy-list></genealogy-list>-->
     </view>
 
 
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 import {ref} from 'vue';
-import MxioScrollX from "@/components/mxio-scroll-x/mxio-scroll-x.vue";
-import ContactsList from "@/pages/contacts/contacts-list.vue";
-import UniEasyinput from "@/components/uni-easyinput/uni-easyinput.vue";
+//import MxioScrollX from "@/components/mxio-scroll-x/mxio-scroll-x.vue";
+import GenealogyList from "../genealogy/genealogy-list.vue";
 
-
+const searchValue = ""
 const barWidth = ref(40);
 const barShow = ref(true)
-const dataSource = [{
-    label: '超市',
-    icon: '/static/images/tab/more.png',
-    color: '',
+
+const src = 'https://cdn.uviewui.com/uview/album/1.jpg'
+
+const info = [{
+    colorClass: 'uni-bg-red',
+    url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
+    content: '内容 A'
+},
+    {
+        colorClass: 'uni-bg-green',
+        url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
+        content: '内容 B'
+    },
+    {
+        colorClass: 'uni-bg-blue',
+        url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
+        content: '内容 C'
+    }
+]
+const current = 1
+const list = [{
+    price: '230.5',
+    thumb: 'https://cdn.uviewui.com/uview/goods/1.jpg'
 }, {
-    label: '水果蔬菜',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '74.1',
+    thumb: 'https://cdn.uviewui.com/uview/goods/2.jpg'
 }, {
-    label: '家用商船',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '8457',
+    thumb: 'https://cdn.uviewui.com/uview/goods/6.jpg'
 }, {
-    label: '酒水',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '1442',
+    thumb: 'https://cdn.uviewui.com/uview/goods/5.jpg'
 }, {
-    label: '瓜果蔬菜',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '541',
+    thumb: 'https://cdn.uviewui.com/uview/goods/2.jpg'
 }, {
-    label: '天天转特比',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '234',
+    thumb: 'https://cdn.uviewui.com/uview/goods/3.jpg'
 }, {
-    label: '小鸡送好礼',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '562',
+    thumb: 'https://cdn.uviewui.com/uview/goods/4.jpg'
 }, {
-    label: '消除应现金',
-    icon: '/static/images/tab/more.png',
-    color: '',
-}, {
-    label: '砍价0元拿',
-    icon: '/static/images/tab/more.png',
-    color: '',
-}, {
-    label: '中关村中关村',
-    icon: '/static/images/tab/more.png',
-    color: '',
-}, {
-    label: '江山明月',
-    icon: '/static/images/tab/more.png',
-    color: '',
+    price: '251.5',
+    thumb: 'https://cdn.uviewui.com/uview/goods/1.jpg'
 }]
 
-const scrollItemEmitsClick = (item: object, index: number, arr: object[]) => {
+
+const scrollItemEmitsClick = (item, index, arr) => {
     console.log(item, index, arr, 1)
+}
+
+function left() {
+    console.log('left');
+}
+
+function right() {
+    console.log('right');
 }
 
 const styles = {
@@ -92,9 +116,18 @@ const styles = {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
 @function realSize($args) {
   @return calc($args / 1.5);
+}
+
+.uni-easyinput__content {
+  border-radius: 40px !important;
+}
+
+.uni-easyinput__content-input {
+  font-size: 18px !important;
 }
 
 .page_main {
@@ -105,58 +138,44 @@ const styles = {
   padding-top: realSize(120px);
   //background-color: #37C2BC;
   width: 100%;
-  height: realSize(535rpx);
-  background-image: linear-gradient(to bottom, rgba(51, 179, 174, 1), rgba(76, 204, 199, 0));
+  height: realSize(165rpx);
+  background: #33b3ad;
 
-  .header {
+  .search {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: realSize(30px);
+
   }
 }
 
+.more {
+  background-image: linear-gradient(to bottom, rgba(51, 179, 173, 1), rgba(51, 179, 173, 0));
+}
 
-.page_content {
-  width: 100%;
-  margin-top: -10px;
+.scroll-list {
+  @include flex(column);
 
-  .menu {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    height: realSize(176px);
-    background: white;
-    box-shadow: 0 10px 10px 0 rgba(0, 161, 124, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    white-space: nowrap;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: space-between;
+  &__goods-item {
+    &:not(:last-of-type) {
+      margin-right: 20px;
+    }
 
-    .item {
-      display: inline-block;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    &__image {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+    }
 
-      padding-top: 20rpx;
-
-      .img_view {
-        border-radius: 30px;
-        align-items: center;
-        justify-content: center;
-
-        .image {
-          width: 30px;
-          height: 30px;
-          padding-left: 30rpx;
-        }
-      }
+    &__text {
+      color: #f56c6c;
+      text-align: center;
+      font-size: 12px;
+      margin-top: 5px;
     }
   }
+
 }
 
 </style>
