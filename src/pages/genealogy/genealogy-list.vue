@@ -29,11 +29,11 @@
                             <u-text type="info" mode="name" :prefixIcon="`${item.Avatar}`" :lines="1"
                                     iconStyle="width:24px;height:24px;margin-right:4px"
                                     text="我用十年青春"></u-text>
-                            <u-text type="error" model="price" prefixIcon="star-fill"
-                                    iconStyle="width:30px;height:30px"
+                            <u-text type="error" model="price" prefixIcon="/static/images/hot.png"
+                                    iconStyle="width:24px;height:24px" customStyle="font-size:16px"
                                     :text="`${count}`"></u-text>
-                            <u-text type="primary" model="text" prefixIcon="plus-circle-fill"
-                                    iconStyle="width:30px;height:30px"
+                            <u-text type="primary" model="text" prefixIcon="/static/images/join.png"
+                                    iconStyle="width:24px;height:24px"
                                     text="加入"></u-text>
                         </view>
                     </view>
