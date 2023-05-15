@@ -6,34 +6,21 @@
                             @input="input"
                             @cancel="cancel" @clear="clear" placeholder="搜索家谱名称" cancelButton="none">
             </uni-search-bar>
-
         </view>
         <view class="more">
             <uni-group mode="card" top="0">
-                <!--                <mxio-scroll-x :dataSource="dataSource" :barWidth="barWidth" :colList="11" :column="0"-->
-                <!--                               :barShow="barShow"-->
-                <!--                               @scrollItemEmitsClick="scrollItemEmitsClick">-->
-                <!--                </mxio-scroll-x>-->
                 <u-scroll-list @right="right" @left="left">
                     <view class="scroll-list" style="flex-direction: row;">
                         <view class="scroll-list__goods-item" v-for="(item, index) in list" :key="index">
                             <image class="scroll-list__goods-item__image" :src="item.thumb"></image>
                             <text class="scroll-list__goods-item__text">￥{{ item.price }}</text>
                         </view>
-                        <!--                        <view class="scroll-list__show-more">-->
-                        <!--                            <text class="scroll-list__show-more__text">查看更多</text>-->
-                        <!--                            <u-icon name="arrow-leftward" color="#f56c6c" size="12"></u-icon>-->
-                        <!--                        </view>-->
                     </view>
                 </u-scroll-list>
             </uni-group>
         </view>
-        <view>
-            <u-image :showLoading="true" :src="src" width="80px" height="80px" @click="click"></u-image>
-        </view>
 
-
-        <!--        <genealogy-list></genealogy-list>-->
+        <genealogy-list></genealogy-list>
     </view>
 
 
@@ -42,12 +29,11 @@
 <script setup>
 
 import {ref} from 'vue';
-//import MxioScrollX from "@/components/mxio-scroll-x/mxio-scroll-x.vue";
+import UniGroup from "@dcloudio/uni-ui/lib/uni-group/uni-group.vue";
+import UniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import GenealogyList from "../genealogy/genealogy-list.vue";
 
 const searchValue = ""
-const barWidth = ref(40);
-const barShow = ref(true)
 
 const src = 'https://cdn.uviewui.com/uview/album/1.jpg'
 
@@ -93,11 +79,6 @@ const list = [{
     price: '251.5',
     thumb: 'https://cdn.uviewui.com/uview/goods/1.jpg'
 }]
-
-
-const scrollItemEmitsClick = (item, index, arr) => {
-    console.log(item, index, arr, 1)
-}
 
 function left() {
     console.log('left');

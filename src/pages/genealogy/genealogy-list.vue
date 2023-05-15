@@ -5,30 +5,40 @@
                   v-model="dataList" @query="queryList">
             <view class="slider" v-for="(item,index) in dataList">
                 <view class="item">
-                    <view class="item_content">
-                        <image class="image" :src="item.Avatar"></image>
-                        <view class="left">
-                            <view class="title">
-                                <text>{{ item.Title }}</text>
-                            </view>
-                            <view class="tags">
-                                <text v-for="(tag,i) in item.Tags" class="tag">
-                                    {{ tag }}
-                                </text>
-                            </view>
+                    <view class="left">
+                        <u-image :custom-style="styles" :showLoading="true" :src="item.Cover" width="80px"
+                                 height="100px"></u-image>
+                    </view>
+                    <view class="right">
+                        <view class="title">
+                            <text>{{ item.Title }}</text>
+                        </view>
 
-                            <view class="people">
-                                <image class="people_logo" src="/static/images/default_avatar.png"></image>
-                                <text class="people_name" :style="{color:item.subColor}">欧阳山峰</text>
-                                <image class="people_total_logo" src="@/static/images/hot.png"></image>
-                                <view class="people_total"> {{ count }}</view>
-                                <image class="join_logo" src="/static/images/join.png"></image>
-                                <text class="join_name" :style="{color:item.subColor}">加入</text>
+                        <view class="tags">
+                            <view v-for="(tag,i) in item.Tags" class="tag-item" :key="i">
+                                <u-tag v-if="i===0" :text="`${textSigh(tag)}`" size="mini"></u-tag>
+                                <u-tag v-if="i===1" :text="`${textSigh(tag)}`" type="warning" size="mini"></u-tag>
+                                <u-tag v-if="i===2" :text="`${textSigh(tag)}`" type="success" size="mini"></u-tag>
+                                <u-tag v-if="i===3" :text="`${textSigh(tag)}`" type="error" size="mini"></u-tag>
                             </view>
                         </view>
 
 
+                        <view class="show">
+
+                            <u-text type="info" mode="name" :prefixIcon="`${item.Avatar}`" :lines="1"
+                                    iconStyle="width:24px;height:24px;margin-right:4px"
+                                    text="我用十年青春"></u-text>
+                            <u-text type="error" model="price" prefixIcon="star-fill"
+                                    iconStyle="width:30px;height:30px"
+                                    :text="`${count}`"></u-text>
+                            <u-text type="primary" model="text" prefixIcon="plus-circle-fill"
+                                    iconStyle="width:30px;height:30px"
+                                    text="加入"></u-text>
+                        </view>
                     </view>
+
+
                 </view>
             </view>
 
@@ -39,76 +49,16 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {useMainStore} from "@/store/myapp";
 
 const mainStore = useMainStore()
 const count = 20
-const tags = [{
-    name: "标题名称a"
-}, {
-    name: "标题名称b"
-}, {
-    name: "标题名称c"
-}]
-const records = [{
-    title: '测试数据',
-    summary: '小A测试数据测试数据测试数据测试数据测试数据',
-    subTitle: '标题名称',
-    subColor: '#15639F',
-    icon: '/static/images/default.png',
-},
-    {
-        title: '查看详情',
-        summary: '小B',
-        subTitle: '标题名称',
-        subColor: '#07B77B',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    },
-    {
-        title: '测试数据',
-        summary: '小A',
-        subTitle: '标题名称',
-        subColor: '#15639F',
-        icon: '/static/images/default.png',
-    }
-]
-
+const styles = {
+    marginTop: '5px',
+    marginBottom: '5px',
+    marginRight: '10px'
+}
 
 // v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
 
@@ -139,8 +89,21 @@ const queryList = (pageNo, pageSize) => {
     })
 
 }
+const textSigh = computed(() => {
+    // value是计算属性执行后，再次执行return里面的函数时传的参数
+    return (value) => {
+        if (!value) return '';
+        if (value.length > 5) {
+            return value.slice(0, 5) + '...'
+        }
+        return value
+    }
+})
+
 </script>
-<style lang="scss" scoped>
+
+
+<style lang="scss">
 .content {
   display: flex;
   flex-direction: column;
@@ -148,6 +111,7 @@ const queryList = (pageNo, pageSize) => {
   width: 100%;
   margin-top: -20rpx;
   background-color: #f2f2f3;
+
 }
 
 
@@ -157,97 +121,46 @@ const queryList = (pageNo, pageSize) => {
   margin: auto;
   border-radius: 8px;
 
+
   .item {
     margin: 15rpx 0rpx 0rpx 15rpx;
+    display: flex;
 
-    .item_content {
-      display: flex;
-
-      .left {
-        .title {
-          margin-top: 10rpx;
-          font-size: 1.2rem;
-        }
-
-        .tags {
-          font-size: 14px;
-          font-weight: 330;
-          color: black;
-          display: flex;
-          margin-top: 20rpx;
-
-          .tag {
-            border-radius: 5px;
-            color: rgba(79, 103, 101, 1);
-            background: #F6F6F6;
-
-            &:not(:first-of-type) {
-              margin-left: 20rpx;
-            }
-          }
-        }
-
-
-      }
-
-      .image {
-        width: 260rpx;
-        height: 196rpx;
-        margin-top: 10rpx;
-        margin-bottom: 10rpx;
-        margin-right: 20rpx;
-      }
-
-
-      .people {
-        display: flex;
-        margin-top: 40rpx;
-
-        .people_logo {
-          width: 44rpx;
-          height: 44rpx;
-          border-radius: 50%;
-        }
-
-        .people_name {
-          width: auto;
-          font-size: 14px;
-          margin-left: 10rpx;
-          background: rgba(255, 255, 255, 0.4);
-          border-radius: 5px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .people_total_logo {
-          width: 44rpx;
-          height: 44rpx;
-          margin-left: 40rpx;
-        }
-
-        .people_total {
-          margin-left: 10rpx;
-          margin-top: 10rpx;
-          font-size: 14px;
-          color: rgba(79, 103, 101, 1);
-        }
-
-        .join_logo {
-          margin-left: 40rpx;
-          width: 48rpx;
-          height: 48rpx;
-        }
-
-        .join_name {
-          margin-left: 10rpx;
-          margin-top: 8rpx;
-          font-size: 14px;
-        }
-
-      }
-
+    .left {
     }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        margin-top: 10rpx;
+        font-size: 1.2rem;
+      }
+
+      .tags {
+        display: flex;
+        flex-direction: row;
+        margin-top: 20rpx;
+
+        .tag-item {
+          margin-right: 10px;
+          display: flex;
+          flex-direction: row;
+          width: auto;
+
+        }
+
+      }
+
+      .show {
+        display: flex;
+        margin-top: 16rpx;
+
+      }
+    }
+
+
   }
 }
 
