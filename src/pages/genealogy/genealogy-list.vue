@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-        <z-paging ref="paging" :fixed="false"
+        <z-paging ref="paging" :fixed="false" auto-show-back-to-top="true"
                   style="height:1000rpx;width:100%;"
                   v-model="dataList" @query="queryList" :default-page-size="5">
             <view class="slider" v-for="(item,index) in dataList">
@@ -73,20 +73,48 @@ const styles = {
 
 const paging = ref(null)
 let dataList = ref([])
-watch(keyword, (newVal, oldVal) => {
-    console.log(newVal)
-    console.log({newVal, oldVal})
-    setTimeout(()=>{
-        paging.value.reload(true)
-    },3000)
+
+// // 给搜索事件 绑定 防抖
+// 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
+const searchInput = debounce(searchEvent, 1200)
+
+const searchVal = ref("")
+watch(keyword, () => {
+    let len = keyword.value.length
+    if (len === 0 || len > 1) {
+        if (searchVal.value === keyword.value) {
+            console.log("searchVal equals keyword")
+            return
+        }
+        searchInput()
+    }
 
 })
-// @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
 
+//搜索事件
+function searchEvent() {
+    paging.value.reload(true)
+    searchVal.value = keyword.value
+}
+
+// 防抖函数
+function debounce(foo, delay) {
+    let timer;
+    return function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            // 暂时理解不了（this，arguments）指向改变的问题
+            foo.call(this, arguments)
+            // 不输入延迟 则默认 1000 ms
+        }, delay || 1000)
+    }
+}
+
+// @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
 const queryList = (pageNo, pageSize) => {
     console.log(keyword)
     let offset = pageNo * pageSize - pageSize
-     uni.request({
+    uni.request({
         url: mainStore.host + "/genealogy/assemble",
         method: "POST",
         data: {
@@ -107,7 +135,7 @@ const queryList = (pageNo, pageSize) => {
 
 }
 const reload = (searchVal) => {
-    console.log("长度"+searchVal.length)
+    console.log("长度" + searchVal.length)
     // if (searchVal.length === 1) {
     //     return
     // }
