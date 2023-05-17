@@ -2,10 +2,12 @@
     <view class="page_main">
 
         <view class="page_main_header">
-            <uni-search-bar @confirm="search" :focus="true" v-model="searchValue" @blur="blur" @focus="focus"
-                            @input="input"
-                            @cancel="cancel" @clear="clear" placeholder="搜索家谱名称" cancelButton="none">
-            </uni-search-bar>
+            <!--            <uni-search-bar @confirm="search" :focus="true" v-model="searchValue" @blur="blur" @focus="focus"-->
+            <!--                            @input="input"-->
+            <!--                            @cancel="cancel" @clear="clear" placeholder="搜索家谱名称" cancelButton="none">-->
+            <!--            </uni-search-bar>-->
+            <u-search placeholder="搜索家谱名称" v-model="params.keyword" :show-action="false"
+                      customStyle="width:90%;margin:0 auto;" ></u-search>
         </view>
         <view class="more">
             <uni-group mode="card" top="0">
@@ -20,7 +22,7 @@
             </uni-group>
         </view>
 
-        <genealogy-list></genealogy-list>
+        <genealogy-list :keyword="params.keyword"></genealogy-list>
     </view>
 
 
@@ -28,31 +30,19 @@
 
 <script setup>
 
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 import UniGroup from "@dcloudio/uni-ui/lib/uni-group/uni-group.vue";
 import UniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import GenealogyList from "../genealogy/genealogy-list.vue";
 
-const searchValue = ""
+const params = ref({
+    keyword: ""
+})
+const queryListRef = ref()
+const queryListHandler = () => {
+    queryListRef.value.reload(params.value.keyword)
+}
 
-const src = 'https://cdn.uviewui.com/uview/album/1.jpg'
-
-const info = [{
-    colorClass: 'uni-bg-red',
-    url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
-    content: '内容 A'
-},
-    {
-        colorClass: 'uni-bg-green',
-        url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
-        content: '内容 B'
-    },
-    {
-        colorClass: 'uni-bg-blue',
-        url: 'https://web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
-        content: '内容 C'
-    }
-]
 const current = 1
 const list = [{
     price: '230.5',

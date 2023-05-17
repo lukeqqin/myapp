@@ -1,8 +1,8 @@
 <template>
     <view class="content">
-        <z-paging ref="paging" :fixed="false" auto-show-back-to-top="true"
+        <z-paging ref="paging" :fixed="false"
                   style="height:1000rpx;width:100%;"
-                  v-model="dataList" @query="queryList">
+                  v-model="dataList" @query="queryList" :default-page-size="5">
             <view class="slider" v-for="(item,index) in dataList">
                 <view class="item">
                     <view class="left">
@@ -49,10 +49,19 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, ref, toRefs, watch} from 'vue';
 import {useMainStore} from "@/store/myapp";
 
+const props = defineProps({
+    //子组件接收父组件传递过来的值
+    keyword: String,
+})
+
+
+const {keyword} = toRefs(props)
+const search = ref("")
 const mainStore = useMainStore()
+
 const count = 20
 const styles = {
     marginTop: '5px',
@@ -64,22 +73,30 @@ const styles = {
 
 const paging = ref(null)
 let dataList = ref([])
+watch(keyword, (newVal, oldVal) => {
+    console.log(newVal)
+    console.log({newVal, oldVal})
+    setTimeout(()=>{
+        paging.value.reload(true)
+    },3000)
 
+})
 // @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
+
 const queryList = (pageNo, pageSize) => {
+    console.log(keyword)
     let offset = pageNo * pageSize - pageSize
-    uni.request({
+     uni.request({
         url: mainStore.host + "/genealogy/assemble",
         method: "POST",
         data: {
             "limit": pageSize,
             "offset": offset,
-            "title": ""
+            "title": keyword.value
         },
         complete: function (res) {
-            console.log(res)
+
             if (res.data.Code === 200) {
-                console.log(res.data.Data.Genealogies)
                 paging.value.complete(res.data.Data.Genealogies);
             } else {
                 paging.value.complete(false);
@@ -89,6 +106,21 @@ const queryList = (pageNo, pageSize) => {
     })
 
 }
+const reload = (searchVal) => {
+    console.log("长度"+searchVal.length)
+    // if (searchVal.length === 1) {
+    //     return
+    // }
+    search.value = searchVal
+    setTimeout(() => {
+        paging.value.reload(true)
+    }, 300)
+
+}
+defineExpose({
+    reload,
+})
+
 const textSigh = computed(() => {
     // value是计算属性执行后，再次执行return里面的函数时传的参数
     return (value) => {
@@ -156,7 +188,6 @@ const textSigh = computed(() => {
       .show {
         display: flex;
         margin-top: 16rpx;
-
       }
     }
 
