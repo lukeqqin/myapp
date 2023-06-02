@@ -1,28 +1,90 @@
 <template>
-    <view class="page_main">
-
-        <view class="page_main_header">
-            <!--            <uni-search-bar @confirm="search" :focus="true" v-model="searchValue" @blur="blur" @focus="focus"-->
-            <!--                            @input="input"-->
-            <!--                            @cancel="cancel" @clear="clear" placeholder="搜索家谱名称" cancelButton="none">-->
-            <!--            </uni-search-bar>-->
-            <u-search placeholder="搜索家谱名称" v-model="params.keyword" :show-action="false"
-                      customStyle="width:90%;margin:0 auto;" ></u-search>
+    <view class="main">
+        <view class="header"></view>
+        <view class="wrap" slot="top">
+            <view class="search">
+                <u-search slot="top" placeholder="搜索" v-model.trim="keyword"
+                          :show-action="false" shape="square"
+                          color="#515151"
+                          bgColor="white"
+                ></u-search>
+            </view>
         </view>
-        <view class="more">
-            <uni-group mode="card" top="0">
-                <u-scroll-list @right="right" @left="left">
-                    <view class="scroll-list" style="flex-direction: row;">
-                        <view class="scroll-list__goods-item" v-for="(item, index) in list" :key="index">
-                            <image class="scroll-list__goods-item__image" :src="item.thumb"></image>
-                            <text class="scroll-list__goods-item__text">￥{{ item.price }}</text>
-                        </view>
+        <view>
+            <view class="content">
+                <z-paging ref="paging" auto-show-back-to-top="true" height="100%"
+                          :show-refresher-when-reload="true"
+                          v-model="dataList" @query="queryList" :default-page-size="6" :fixed="false"
+                          :auto-clean-list-when-reload="false">
+
+                    <view class="slider" v-for="(item,index) in dataList">
+                        <u-cell-group>
+
+                            <view class="item">
+                                <view class="left">
+                                    <u-image :showLoading="true" :src="item.Cover" width="108px"
+                                             height="130px"></u-image>
+                                </view>
+                                <view class="right">
+                                    <view class="wrap-title">
+                                        <view class="title">
+                                            <u-text :text="`${item.Title}`" size="18"></u-text>
+                                        </view>
+                                        <view class="join">
+                                            <!--                                            <u-text type="primary" size="18" text="申请加入"></u-text>-->
+                                            <u-button text="申请加入"
+                                                      color="linear-gradient(to right, rgb(66, 83, 216), rgb(213, 51, 186))"
+                                                      size="mini"></u-button>
+                                        </view>
+                                    </view>
+
+                                    <view class="tags">
+                                        <view v-for="(tag,i) in item.Tags" class="tag-item" :key="i">
+                                            <u-tag v-if="i===0" :text="`${textSigh(tag)}`" size="mini"></u-tag>
+                                            <u-tag v-if="i===1" :text="`${textSigh(tag)}`" type="warning"
+                                                   size="mini"></u-tag>
+                                            <u-tag v-if="i===2" :text="`${textSigh(tag)}`" type="success"
+                                                   size="mini"></u-tag>
+                                            <u-tag v-if="i===3" :text="`${textSigh(tag)}`" type="error"
+                                                   size="mini"></u-tag>
+                                        </view>
+                                    </view>
+
+
+                                    <view class="show">
+
+                                        <u-icon name="account-fill" color="#2979ff" size="24"></u-icon>
+                                        <u-badge numberType="limit" :inverted="true" :value="`${count}`"
+                                                 customStyle="font-size:16px;margin-right:16rpx"></u-badge>
+                                        <u-icon name="star-fill" color="#2979ff" size="20"></u-icon>
+                                        <u-badge numberType="limit" :inverted="true" :value="`${count}`"
+                                                 customStyle="font-size:16px;margin-right:16rpx"
+                                                 type="primary"></u-badge>
+                                        <u-icon name="heart-fill" color="#2979ff" size="20"></u-icon>
+                                        <u-badge numberType="limit" :inverted="true" :value="`${count}`"
+                                                 customStyle="font-size:16px;margin-right:16rpx"
+                                                 type="primary"></u-badge>
+
+                                    </view>
+                                    <view class="avatar">
+                                        <u-avatar :src="'https://cdn.uviewui.com/uview/album/1.jpg'"
+                                                  size="20"></u-avatar>
+                                        <u-text type="primary" mode="name" format="encrypt" :lines="1"
+                                                customStyle="font-size:14px;margin-left:12rpx"
+                                                text="十年青春"></u-text>
+                                    </view>
+                                </view>
+                            </view>
+                        </u-cell-group>
+
                     </view>
-                </u-scroll-list>
-            </uni-group>
+
+                </z-paging>
+
+
+            </view>
         </view>
 
-        <genealogy-list :keyword="params.keyword"></genealogy-list>
     </view>
 
 
@@ -30,123 +92,187 @@
 
 <script setup>
 
-import {ref, watch} from 'vue';
-import UniGroup from "@dcloudio/uni-ui/lib/uni-group/uni-group.vue";
-import UniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
-import GenealogyList from "../genealogy/genealogy-list.vue";
+import {computed, ref, watch} from "vue";
+import {useMainStore} from "@/store/myapp";
 
-const params = ref({
-    keyword: ""
+const keyword = ref("")
+const search = ref("")
+const mainStore = useMainStore()
+
+const count = 21345
+
+// v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
+const paging = ref(null)
+let dataList = ref([])
+
+// // 给搜索事件 绑定 防抖
+// 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
+const searchInput = debounce(searchEvent, 1200)
+
+const searchVal = ref("")
+watch(keyword, () => {
+    let len = keyword.value.length
+    if (len === 0 || len > 1) {
+        if (searchVal.value === keyword.value) {
+            return
+        }
+        searchInput()
+    }
+
 })
-const queryListRef = ref()
-const queryListHandler = () => {
-    queryListRef.value.reload(params.value.keyword)
+
+//搜索事件
+function searchEvent() {
+    paging.value.reload(true)
+    searchVal.value = keyword.value
 }
 
-const current = 1
-const list = [{
-    price: '230.5',
-    thumb: 'https://cdn.uviewui.com/uview/goods/1.jpg'
-}, {
-    price: '74.1',
-    thumb: 'https://cdn.uviewui.com/uview/goods/2.jpg'
-}, {
-    price: '8457',
-    thumb: 'https://cdn.uviewui.com/uview/goods/6.jpg'
-}, {
-    price: '1442',
-    thumb: 'https://cdn.uviewui.com/uview/goods/5.jpg'
-}, {
-    price: '541',
-    thumb: 'https://cdn.uviewui.com/uview/goods/2.jpg'
-}, {
-    price: '234',
-    thumb: 'https://cdn.uviewui.com/uview/goods/3.jpg'
-}, {
-    price: '562',
-    thumb: 'https://cdn.uviewui.com/uview/goods/4.jpg'
-}, {
-    price: '251.5',
-    thumb: 'https://cdn.uviewui.com/uview/goods/1.jpg'
-}]
-
-function left() {
-    console.log('left');
+// 防抖函数
+function debounce(foo, delay) {
+    let timer;
+    return function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            // 暂时理解不了（this，arguments）指向改变的问题
+            foo.call(this, arguments)
+            // 不输入延迟 则默认 1000 ms
+        }, delay || 1000)
+    }
 }
 
-function right() {
-    console.log('right');
+// @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
+const queryList = (pageNo, pageSize) => {
+    let offset = pageNo * pageSize - pageSize
+    uni.request({
+        url: mainStore.host + "/genealogy/assemble",
+        method: "POST",
+        data: {
+            "limit": pageSize,
+            "offset": offset,
+            "title": keyword.value
+        },
+        complete: function (res) {
+            console.log(res)
+            if (res.data.Code === 200) {
+
+                paging.value.complete(res.data.Data.Genealogies);
+            } else {
+                paging.value.complete(false);
+            }
+
+        }
+    })
+
+}
+const reload = (searchVal) => {
+    search.value = searchVal
+    setTimeout(() => {
+        paging.value.reload(true)
+    }, 300)
+
 }
 
-const styles = {
-    color: '#999',
-    backgroundColor: '#FFFFFF',
-    disableColor: '#e5e5e5',
-    borderColor: '#e5e5e5',
-}
+
+const textSigh = computed(() => {
+    // value是计算属性执行后，再次执行return里面的函数时传的参数
+    return (value) => {
+        if (!value) return '';
+        if (value.length > 5) {
+            return value.slice(0, 5) + '...'
+        }
+        return value
+    }
+})
 
 </script>
 
 <style lang="scss">
 
-@function realSize($args) {
-  @return calc($args / 1.5);
+.main {
+  .header {
+    background-color: #f2f2f3;
+    height: 200rpx;
+  }
+
+  .wrap {
+    background-color: #f2f2f3;
+    height: 80rpx;
+
+    .search {
+      display: flex;
+      width: 96%;
+      background-color: #f2f2f3;
+      margin: auto;
+    }
+  }
+
 }
 
-.uni-easyinput__content {
-  border-radius: 40px !important;
+.content {
+  height: calc(100vh - 150px)
 }
 
-.uni-easyinput__content-input {
-  font-size: 18px !important;
-}
 
-.page_main {
-  width: 100%;
-}
+.slider {
 
-.page_main_header {
-  padding-top: realSize(120px);
-  //background-color: #37C2BC;
-  width: 100%;
-  height: realSize(165rpx);
-  background: #33b3ad;
-
-  .search {
+  .item {
+    margin: 10rpx 10rpx;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: realSize(30px);
+
+    .left {
+
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      margin-left: 20rpx;
+      width: 100%;
+
+      .wrap-title {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .join {
+
+        margin-left: auto;
+      }
+
+      .title {
+        margin-top: 10rpx;
+        font-size: 1.2rem;
+      }
+
+      .tags {
+        display: flex;
+        flex-direction: row;
+        margin-top: 14rpx;
+
+        .tag-item {
+          margin-right: 10px;
+          width: auto;
+
+        }
+
+      }
+
+      .show {
+        display: flex;
+        flex-direction: row;
+        margin-top: 14rpx;
+        align-items: center;
+      }
+
+      .avatar {
+        display: flex;
+        flex-direction: row;
+        margin-top: 14rpx;
+      }
+    }
+
 
   }
-}
-
-.more {
-  background-image: linear-gradient(to bottom, rgba(51, 179, 173, 1), rgba(51, 179, 173, 0));
-}
-
-.scroll-list {
-  @include flex(column);
-
-  &__goods-item {
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
-
-    &__image {
-      width: 60px;
-      height: 60px;
-      border-radius: 4px;
-    }
-
-    &__text {
-      color: #f56c6c;
-      text-align: center;
-      font-size: 12px;
-      margin-top: 5px;
-    }
-  }
-
 }
 
 </style>

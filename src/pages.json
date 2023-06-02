@@ -12,23 +12,23 @@
       "path": "pages/index/index"
     },
     {
-      "path": "pages/release/release"
+      "path": "pages/genealogy/index"
     },
     {
-      "path": "pages/user/user"
+      "path": "pages/service/index"
     },
     {
-      "path": "pages/artists/artists"
-    },
-    {
-      "path": "pages/message/message"
+      "path": "pages/user/index",
+      "style": {
+        "backgroundColorTop": "#ffffff"
+      }
     }
   ],
   "globalStyle": {
-    "backgroundColorTop": "#FFFFFF",
+    "backgroundColorTop": "#f2f2f3",
     "navigationBarTitleText": "",
-    "navigationStyle": "custom",
-    "disableScroll": true
+    "navigationStyle": "custom"
+    //"disableScroll": true
   },
   "uniIdRouter": {},
   "tabBar": {
@@ -42,29 +42,24 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/artists/artists",
-        "iconPath": "/static/images/tab-bar/family.png",
-        "selectedIconPath": "/static/images/tab-bar/family_active.png",
+        "pagePath": "pages/genealogy/index",
+        "iconPath": "/static/images/tab-bar/genealogy.png",
+        "selectedIconPath": "/static/images/tab-bar/genealogy_active.png",
         "text": "家谱"
       },
       {
-        "pagePath": "pages/release/release",
-        "iconPath": "/static/images/tab-bar/message.png",
-        "selectedIconPath": "/static/images/tab-bar/message_active.png",
-        "text": "消息"
+        "pagePath": "pages/service/index",
+        "iconPath": "/static/images/tab-bar/discover.png",
+        "selectedIconPath": "/static/images/tab-bar/discover_active.png",
+        "text": "发现"
       },
       {
-        "pagePath": "pages/message/message",
-        "iconPath": "/static/images/tab-bar/genealogy.png",
-        "selectedIconPath": "/static/images/tab-bar/genealogy_active.png",
-        "text": "人脉"
-      },
-      {
-        "pagePath": "pages/user/user",
+        "pagePath": "pages/user/index",
         "iconPath": "/static/images/tab-bar/my.png",
         "selectedIconPath": "/static/images/tab-bar/my_active.png",
         "text": "我的"
       }
-    ]
+    ],
+    "backgroundColor": "#f2f2f3"
   }
 }
