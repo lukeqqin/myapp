@@ -39,7 +39,7 @@
         <u-cell icon="setting-fill" title="设置" isLink size="large"></u-cell>
       </u-cell-group>
     </view>
-
+    <view class="gap"></view>
   </view>
 </template>
 
@@ -75,6 +75,10 @@ import UniGroup from "@dcloudio/uni-ui/lib/uni-group/uni-group.vue"
     }
   }
 
+  .gap {
+    height: calc(100vh - 506px);
+    background-color: #f2f2f3;
+  }
 }
 
 </style>

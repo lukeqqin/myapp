@@ -15,12 +15,17 @@
       "path": "pages/genealogy/index"
     },
     {
-      "path": "pages/service/index"
+      "path": "pages/service/index",
+      "style": {
+        "backgroundColorTop": "#f2f2f3",
+        "backgroundColorBottom": "#f2f2f3"
+      }
     },
     {
       "path": "pages/user/index",
       "style": {
-        "backgroundColorTop": "#ffffff"
+        "backgroundColorTop": "#ffffff",
+        "backgroundColorBottom": "#f2f2f3"
       }
     }
   ],
