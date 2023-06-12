@@ -3,7 +3,7 @@
     <view class="header"></view>
     <view class="content">
       <z-paging ref="paging" auto-show-back-to-top="true" height="100%" refresher-threshold="0"
-                v-model="dataList" @query="queryList" :default-page-size="6" :fixed="false" :show-console-error="true"
+                v-model="dataList" @query="queryList" :default-page-size="10" :fixed="false" :show-console-error="true"
                 :auto-clean-list-when-reload="false">
         <view class="wrap">
           <view class="search">
@@ -19,8 +19,7 @@
 
             <view class="item">
               <view class="left">
-                <u-image :showLoading="true" :src="item.Cover" width="108px"
-                         height="100px"></u-image>
+                <u-image :showLoading="true" :src="item.Cover" width="100px" height="82px"></u-image>
               </view>
               <view class="right">
                 <view class="wrap-title">
@@ -35,27 +34,25 @@
                 </view>
 
                 <view class="show">
-
-                  <u-icon name="account-fill" color="#2979ff" size="24"></u-icon>
-                  <u-badge numberType="limit" :inverted="true" :value="`${count}`"
-                           customStyle="font-size:16px;margin-right:16rpx"></u-badge>
-                  <u-icon name="star-fill" color="#2979ff" size="20"></u-icon>
-                  <u-badge numberType="limit" :inverted="true" :value="`${count}`"
-                           customStyle="font-size:16px;margin-right:16rpx"
-                           type="primary"></u-badge>
-                  <u-icon name="heart-fill" color="#2979ff" size="20"></u-icon>
-                  <u-badge numberType="limit" :inverted="true" :value="`${count}`"
-                           customStyle="font-size:16px;margin-right:16rpx"
-                           type="primary"></u-badge>
+                  <view class="avatar">
+                    <u-avatar :src="'https://cdn.uviewui.com/uview/album/1.jpg'"
+                              size="26"></u-avatar>
+                    <u-text type="primary" mode="name" format="encrypt" :lines="1"
+                            customStyle="font-size:14px;margin-left:16rpx;margin-right:16rpx"
+                            text="十年青春"></u-text>
+                  </view>
+                  <view class="avatar">
+                    <u-icon name="account-fill" color="#2979ff" size="24" customStyle="margin-left:16rpx"></u-icon>
+                    <u-badge numberType="limit" :inverted="true" :value="`${count}`"
+                             customStyle="font-size:16px;margin-right:16rpx;margin-top:8rpx"></u-badge>
+                    <u-icon name="star-fill" color="#2979ff" size="20" customStyle="margin-left:16rpx"></u-icon>
+                    <u-badge numberType="limit" :inverted="true" :value="`${count}`"
+                             customStyle="font-size:16px;margin-right:16rpx;margin-top:8rpx"
+                             type="primary"></u-badge>
+                  </view>
 
                 </view>
-                <view class="avatar">
-                  <u-avatar :src="'https://cdn.uviewui.com/uview/album/1.jpg'"
-                            size="26"></u-avatar>
-                  <u-text type="primary" mode="name" format="encrypt" :lines="1"
-                          customStyle="font-size:14px;margin-left:16rpx"
-                          text="十年青春"></u-text>
-                </view>
+
               </view>
             </view>
           </u-cell-group>
@@ -191,7 +188,7 @@ const textSigh = computed(() => {
 }
 
 .content {
-  height: calc(100vh - 114px)
+  height: calc(100vh - 120px)
 }
 
 
@@ -200,7 +197,7 @@ const textSigh = computed(() => {
   .item {
     margin: 10rpx -10rpx;
     display: flex;
-
+    height: 151rpx;
     .left {
 
     }
@@ -228,14 +225,14 @@ const textSigh = computed(() => {
       .show {
         display: flex;
         flex-direction: row;
-        margin-top: 14rpx;
+        margin-top: 6rpx;
         align-items: center;
       }
 
       .avatar {
         display: flex;
         flex-direction: row;
-        margin-top: 18rpx;
+        margin-top: 36rpx;
       }
     }
   }
