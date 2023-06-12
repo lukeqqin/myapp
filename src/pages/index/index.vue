@@ -20,7 +20,7 @@
             <view class="item">
               <view class="left">
                 <u-image :showLoading="true" :src="item.Cover" width="108px"
-                         height="130px"></u-image>
+                         height="100px"></u-image>
               </view>
               <view class="right">
                 <view class="wrap-title">
@@ -33,19 +33,6 @@
                               size="mini"></u-button>
                   </view>
                 </view>
-
-                <view class="tags">
-                  <view v-for="(tag,i) in item.Tags" class="tag-item" :key="i">
-                    <u-tag v-if="i===0" :text="`${textSigh(tag)}`" size="mini"></u-tag>
-                    <u-tag v-if="i===1" :text="`${textSigh(tag)}`" type="warning"
-                           size="mini"></u-tag>
-                    <u-tag v-if="i===2" :text="`${textSigh(tag)}`" type="success"
-                           size="mini"></u-tag>
-                    <u-tag v-if="i===3" :text="`${textSigh(tag)}`" type="error"
-                           size="mini"></u-tag>
-                  </view>
-                </view>
-
 
                 <view class="show">
 
@@ -64,9 +51,9 @@
                 </view>
                 <view class="avatar">
                   <u-avatar :src="'https://cdn.uviewui.com/uview/album/1.jpg'"
-                            size="20"></u-avatar>
+                            size="26"></u-avatar>
                   <u-text type="primary" mode="name" format="encrypt" :lines="1"
-                          customStyle="font-size:14px;margin-left:12rpx"
+                          customStyle="font-size:14px;margin-left:16rpx"
                           text="十年青春"></u-text>
                 </view>
               </view>
@@ -204,14 +191,14 @@ const textSigh = computed(() => {
 }
 
 .content {
-  height: calc(100vh - 150px)
+  height: calc(100vh - 114px)
 }
 
 
 .slider {
 
   .item {
-    margin: 10rpx 10rpx;
+    margin: 10rpx -10rpx;
     display: flex;
 
     .left {
@@ -221,7 +208,6 @@ const textSigh = computed(() => {
     .right {
       display: flex;
       flex-direction: column;
-      margin-left: 20rpx;
       width: 100%;
 
       .wrap-title {
@@ -230,26 +216,13 @@ const textSigh = computed(() => {
       }
 
       .join {
-
-        margin-left: auto;
+        margin-left: 380rpx;
+        margin-top: 10rpx;
       }
 
       .title {
         margin-top: 10rpx;
         font-size: 1.2rem;
-      }
-
-      .tags {
-        display: flex;
-        flex-direction: row;
-        margin-top: 14rpx;
-
-        .tag-item {
-          margin-right: 10px;
-          width: auto;
-
-        }
-
       }
 
       .show {
@@ -262,7 +235,7 @@ const textSigh = computed(() => {
       .avatar {
         display: flex;
         flex-direction: row;
-        margin-top: 14rpx;
+        margin-top: 18rpx;
       }
     }
   }

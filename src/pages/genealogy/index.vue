@@ -19,12 +19,9 @@
             <u-cell icon="setting-fill" size="large" title="新的成员"></u-cell>
             <u-cell icon="setting-fill" size="large" title="家族管理"></u-cell>
             <u-cell icon="setting-fill" size="large" title="人脉分布"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家谱图"></u-cell>
+            <u-cell icon="setting-fill" size="large" title="家族谱图"></u-cell>
             <u-cell icon="setting-fill" size="large" title="家谱制作"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="历史档案"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="文化传承"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="论坛"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="活动"></u-cell>
+            <u-cell icon="setting-fill" size="large" title="家族活动"></u-cell>
           </u-cell-group>
         </view>
         <view class="u-page">
