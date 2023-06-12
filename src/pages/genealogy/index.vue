@@ -3,7 +3,7 @@
     <view class="header"></view>
     <view class="content">
       <z-paging ref="paging" auto-show-back-to-top="true" height="100%" refresher-threshold="0"
-                v-model="indexList" @query="queryList" :default-page-size="6" :fixed="false" :show-console-error="true"
+                v-model="indexList" @query="queryList" :default-page-size="7" :fixed="false" :show-console-error="true"
                 :auto-clean-list-when-reload="false">
         <view class="wrap">
           <view class="search">
@@ -19,7 +19,7 @@
             <u-cell icon="setting-fill" size="large" title="新的成员"></u-cell>
             <u-cell icon="setting-fill" size="large" title="家族管理"></u-cell>
             <u-cell icon="setting-fill" size="large" title="人脉分布"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家族谱图"></u-cell>
+            <u-cell icon="setting-fill" size="large" title="家族图谱"></u-cell>
             <u-cell icon="setting-fill" size="large" title="家谱制作"></u-cell>
             <u-cell icon="setting-fill" size="large" title="家族活动"></u-cell>
           </u-cell-group>
