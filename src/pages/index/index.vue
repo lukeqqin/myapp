@@ -25,7 +25,7 @@
               <view class="right">
                 <view class="wrap-title">
                   <view class="title">
-                    <u-text :text="`${item.Title}`" size="18"></u-text>
+                    <u-text :text="item.Title" size="18"></u-text>
                   </view>
                   <view class="join">
                     <u-button text="申请加入"
