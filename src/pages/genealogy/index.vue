@@ -1,9 +1,24 @@
 <template>
   <view class="main">
-    <view class="header"></view>
+    <view class="empty" v-if="columns.length===0">
+      <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" marginTop="500rpx">
+        <u-button size="small" type="primary" :style="{marginTop:10+'px'}" text="创建族谱"></u-button>
+      </u-empty>
+    </view>
+    <view class="header">
+      <view class="picker">
+        <view>
+          <u-cell @click="show = true" center isLink size="normal" arrowDirection="down" :icon="genealogy">
+          </u-cell>
+        </view>
+        <u-picker :show="show" :columns="columns" keyName="Title" closeOnClickOverlay @cancel="cancel"
+                  @confirm="confirm" @close="cancel"></u-picker>
+      </view>
+    </view>
     <view class="content">
       <z-paging ref="paging" auto-show-back-to-top="true" height="100%" refresher-threshold="0"
-                v-model="indexList" @query="queryList" :default-page-size="7" :fixed="false" :show-console-error="true"
+                v-model="indexList" @query="queryList" :default-page-size="8" :fixed="false"
+                :show-console-error="true"
                 :auto-clean-list-when-reload="false">
         <view class="wrap">
           <view class="search">
@@ -24,34 +39,36 @@
             <u-cell icon="setting-fill" size="large" title="家族活动"></u-cell>
           </u-cell-group>
         </view>
-        <view class="u-page">
-          <u-list>
-            <u-list-item v-for="(item, index) in indexList" :key="index">
-              <u-cell :title="item.Name">
-                <template #icon>
-                  <u-avatar shape="square" size="35" :src="item.Avatar"
-                            customStyle="margin: -3px 5px -3px 0"></u-avatar>
-                </template>
-              </u-cell>
-            </u-list-item>
-          </u-list>
+        <view class="u-page" v-for="(item, index) in indexList" :key="index">
+          <!--          <u-list pagingEnabled enableBackToTop>-->
+          <!--            <u-list-item v-for="(item, index) in indexList" :key="index">-->
+          <u-cell :title="item.Name">
+            <template #icon>
+              <u-avatar shape="square" size="35" :src="item.Avatar"
+                        customStyle="margin: -3px 5px -3px 0"></u-avatar>
+            </template>
+          </u-cell>
+          <!--            </u-list-item>-->
+
         </view>
       </z-paging>
     </view>
-
-
   </view>
-
 
 </template>
 
 <script setup>
 
-const indexList = ref([])
-
+import {onLoad, onShow} from "@dcloudio/uni-app";
 import {computed, ref, watch} from "vue";
 import {useMainStore} from "@/store/myapp";
 
+const indexList = ref([])
+const show = ref(false)
+const columns = ref([])
+const genealogy = ref("")
+const my = ref("")
+const genealogyId = ref(0)
 const keyword = ref("")
 const search = ref("")
 const mainStore = useMainStore()
@@ -73,7 +90,6 @@ watch(keyword, () => {
     }
     searchInput()
   }
-
 })
 
 //搜索事件
@@ -104,15 +120,20 @@ const queryList = (pageNo, pageSize) => {
     data: {
       "limit": pageSize,
       "offset": offset,
-      "genealogyId": 0
+      "genealogyId": genealogyId.value
     },
     complete: function (res) {
       console.log(res)
       if (res.data.Code === 200) {
-
         paging.value.complete(res.data.Data.GenealogyMembers);
       } else {
         paging.value.complete(false);
+        uni.showToast({
+          title: res.data.Msg,
+          duration: 2000,
+          icon: 'error'
+        })
+
       }
 
     }
@@ -139,6 +160,45 @@ const textSigh = computed(() => {
   }
 })
 
+onLoad(
+    () => {
+      uni.request({
+        url: mainStore.host + "/genealogy/my",
+        method: "POST",
+        data: {
+          "userId": 1,
+        },
+        complete: function (res) {
+          if (res.data.Code === 200) {
+            if (res.data.Data.length > 0) {
+              genealogyId.value = res.data.Data[0].ID
+              genealogy.value = res.data.Data[0].Title
+              columns.value.push(res.data.Data)
+            }
+          } else {
+            uni.showToast({
+              title: res.data.Msg,
+              duration: 2000,
+              icon: 'error'
+            })
+          }
+
+        }
+      })
+
+    }
+)
+
+function cancel() {
+  show.value = false
+}
+
+function confirm(e) {
+  //console.log('confirm', e);
+  show.value = false
+}
+
+
 </script>
 
 <style lang="scss">
@@ -146,24 +206,32 @@ const textSigh = computed(() => {
 .main {
   .header {
     background-color: #f2f2f3;
+    display: flex;
     height: 200rpx;
+
+    .picker {
+      margin: 100rpx auto;
+    }
   }
 
   .content {
-    height: calc(100vh - 150px)
-  }
+    height: calc(100vh - 114px);
 
-  .wrap {
-    background-color: #f2f2f3;
-    height: 80rpx;
-
-    .search {
-      // display: flex;
-      width: 96%;
+    .wrap {
       background-color: #f2f2f3;
-      margin: auto;
+      height: 80rpx;
+
+      .search {
+        width: 96%;
+        background-color: #f2f2f3;
+        margin: auto;
+      }
+    }
+
+    .u-page {
     }
   }
+
 
 }
 

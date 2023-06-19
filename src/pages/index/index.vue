@@ -131,9 +131,7 @@ const queryList = (pageNo, pageSize) => {
       "title": keyword.value
     },
     complete: function (res) {
-      console.log(res)
       if (res.data.Code === 200) {
-
         paging.value.complete(res.data.Data.Genealogies);
       } else {
         paging.value.complete(false);

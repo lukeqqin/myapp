@@ -32,7 +32,7 @@
   "globalStyle": {
     "backgroundColorTop": "#f2f2f3",
     "navigationBarTitleText": "",
-    "navigationStyle": "custom"
+    "navigationStyle": "custom",
     //"disableScroll": true
   },
   "uniIdRouter": {},
