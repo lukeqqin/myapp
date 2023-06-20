@@ -73,9 +73,9 @@
 
 import {computed, ref, watch} from "vue";
 import {useMainStore} from "@/store/myapp";
+import {debounce} from "@/static/js/debounce";
 
 const keyword = ref("")
-const search = ref("")
 const mainStore = useMainStore()
 
 const count = 21345
@@ -83,7 +83,6 @@ const count = 21345
 // v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
 const paging = ref(null)
 let dataList = ref([])
-
 // // 给搜索事件 绑定 防抖
 // 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
 const searchInput = debounce(searchEvent, 1200)
@@ -106,19 +105,6 @@ function searchEvent() {
   searchVal.value = keyword.value
 }
 
-// 防抖函数
-function debounce(foo, delay) {
-  let timer;
-  return function () {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      // 暂时理解不了（this，arguments）指向改变的问题
-      foo.call(this, arguments)
-      // 不输入延迟 则默认 1000 ms
-    }, delay || 1000)
-  }
-}
-
 // @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
 const queryList = (pageNo, pageSize) => {
   let offset = pageNo * pageSize - pageSize
@@ -139,13 +125,6 @@ const queryList = (pageNo, pageSize) => {
 
     }
   })
-
-}
-const reload = (searchVal) => {
-  search.value = searchVal
-  setTimeout(() => {
-    paging.value.reload(true)
-  }, 300)
 
 }
 
@@ -196,6 +175,7 @@ const textSigh = computed(() => {
     margin: 10rpx -10rpx;
     display: flex;
     height: 151rpx;
+
     .left {
 
     }

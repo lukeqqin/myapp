@@ -1,58 +1,59 @@
 <template>
+
   <view class="main">
-    <view class="empty" v-if="columns.length===0">
-      <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" marginTop="500rpx">
+    <view v-show="empty && columns.length===0">
+      <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png"
+               customStyle="margin:auto;top:0;left:0;right:0;bottom:0;position:absolute;">
         <u-button size="small" type="primary" :style="{marginTop:10+'px'}" text="创建族谱"></u-button>
       </u-empty>
     </view>
-    <view class="header">
-      <view class="picker">
-        <view>
-          <u-cell @click="show = true" center isLink size="normal" arrowDirection="down" :icon="genealogy">
-          </u-cell>
+    <view v-show="empty===false && columns.length!==0">
+      <view class="header">
+        <view class="picker">
+          <view>
+            <u-cell @click="show = true" center isLink size="normal" arrowDirection="down" :icon="genealogy"></u-cell>
+          </view>
+          <u-picker :show="show" :columns="columns" keyName="Title" closeOnClickOverlay @cancel="cancel"
+                    @confirm="confirm" @close="cancel"></u-picker>
         </view>
-        <u-picker :show="show" :columns="columns" keyName="Title" closeOnClickOverlay @cancel="cancel"
-                  @confirm="confirm" @close="cancel"></u-picker>
+      </view>
+      <view class="content">
+        <z-paging ref="paging" :auto-show-back-to-top="true" height="100%" refresher-threshold="0"
+                  v-model="indexList" @query="queryList" :default-page-size="8" :fixed="false"
+                  :show-console-error="true"
+                  :auto-clean-list-when-reload="false">
+          <view class="wrap">
+            <view class="search">
+              <u-search slot="top" placeholder="搜索" v-model.trim="keyword"
+                        :show-action="false" shape="square"
+                        color="#515151"
+                        bgColor="white"
+              ></u-search>
+            </view>
+          </view>
+          <view>
+            <u-cell-group>
+              <u-cell icon="setting-fill" size="large" title="新的成员"></u-cell>
+              <u-cell icon="setting-fill" size="large" title="家族管理"></u-cell>
+              <u-cell icon="setting-fill" size="large" title="人脉分布"></u-cell>
+              <u-cell icon="setting-fill" size="large" title="家族图谱"></u-cell>
+              <u-cell icon="setting-fill" size="large" title="家谱制作"></u-cell>
+              <u-cell icon="setting-fill" size="large" title="家族活动"></u-cell>
+            </u-cell-group>
+          </view>
+          <view v-for="(item, index) in indexList" :key="index">
+            <u-cell :title="item.Name">
+              <template #icon>
+                <u-avatar shape="square" size="35" :src="item.Avatar"
+                          customStyle="margin: -3px 5px -3px 0"></u-avatar>
+              </template>
+            </u-cell>
+          </view>
+        </z-paging>
       </view>
     </view>
-    <view class="content">
-      <z-paging ref="paging" auto-show-back-to-top="true" height="100%" refresher-threshold="0"
-                v-model="indexList" @query="queryList" :default-page-size="8" :fixed="false"
-                :show-console-error="true"
-                :auto-clean-list-when-reload="false">
-        <view class="wrap">
-          <view class="search">
-            <u-search slot="top" placeholder="搜索" v-model.trim="keyword"
-                      :show-action="false" shape="square"
-                      color="#515151"
-                      bgColor="white"
-            ></u-search>
-          </view>
-        </view>
-        <view>
-          <u-cell-group>
-            <u-cell icon="setting-fill" size="large" title="新的成员"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家族管理"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="人脉分布"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家族图谱"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家谱制作"></u-cell>
-            <u-cell icon="setting-fill" size="large" title="家族活动"></u-cell>
-          </u-cell-group>
-        </view>
-        <view class="u-page" v-for="(item, index) in indexList" :key="index">
-          <!--          <u-list pagingEnabled enableBackToTop>-->
-          <!--            <u-list-item v-for="(item, index) in indexList" :key="index">-->
-          <u-cell :title="item.Name">
-            <template #icon>
-              <u-avatar shape="square" size="35" :src="item.Avatar"
-                        customStyle="margin: -3px 5px -3px 0"></u-avatar>
-            </template>
-          </u-cell>
-          <!--            </u-list-item>-->
 
-        </view>
-      </z-paging>
-    </view>
+
   </view>
 
 </template>
@@ -60,19 +61,20 @@
 <script setup>
 
 import {onLoad, onShow} from "@dcloudio/uni-app";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import {useMainStore} from "@/store/myapp";
+import {debounce} from "@/static/js/debounce";
 
 const indexList = ref([])
-const show = ref(false)
-const columns = ref([])
+let show = ref(false)
+let empty = ref(false)
+const columns = reactive([])
 const genealogy = ref("")
 const my = ref("")
 const genealogyId = ref(0)
 const keyword = ref("")
-const search = ref("")
+const searchVal = ref("")
 const mainStore = useMainStore()
-
 
 // v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
 const paging = ref(null)
@@ -81,7 +83,7 @@ const paging = ref(null)
 // 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
 const searchInput = debounce(searchEvent, 1200)
 
-const searchVal = ref("")
+
 watch(keyword, () => {
   let len = keyword.value.length
   if (len === 0 || len > 1) {
@@ -98,19 +100,6 @@ function searchEvent() {
   searchVal.value = keyword.value
 }
 
-// 防抖函数
-function debounce(foo, delay) {
-  let timer;
-  return function () {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      // 暂时理解不了（this，arguments）指向改变的问题
-      foo.call(this, arguments)
-      // 不输入延迟 则默认 1000 ms
-    }, delay || 1000)
-  }
-}
-
 // @query所绑定的方法不要自己调用！！需要刷新列表数据时，只需要调用paging.reload()即可
 const queryList = (pageNo, pageSize) => {
   let offset = pageNo * pageSize - pageSize
@@ -120,7 +109,8 @@ const queryList = (pageNo, pageSize) => {
     data: {
       "limit": pageSize,
       "offset": offset,
-      "genealogyId": genealogyId.value
+      "genealogyId": genealogyId.value,
+      "name": keyword.value,
     },
     complete: function (res) {
       console.log(res)
@@ -140,26 +130,6 @@ const queryList = (pageNo, pageSize) => {
   })
 
 }
-const reload = (searchVal) => {
-  search.value = searchVal
-  setTimeout(() => {
-    paging.value.reload(true)
-  }, 300)
-
-}
-
-
-const textSigh = computed(() => {
-  // value是计算属性执行后，再次执行return里面的函数时传的参数
-  return (value) => {
-    if (!value) return '';
-    if (value.length > 5) {
-      return value.slice(0, 5) + '...'
-    }
-    return value
-  }
-})
-
 onLoad(
     () => {
       uni.request({
@@ -173,7 +143,9 @@ onLoad(
             if (res.data.Data.length > 0) {
               genealogyId.value = res.data.Data[0].ID
               genealogy.value = res.data.Data[0].Title
-              columns.value.push(res.data.Data)
+              columns.push(res.data.Data)
+            } else {
+              empty.value = true
             }
           } else {
             uni.showToast({
@@ -228,11 +200,7 @@ function confirm(e) {
       }
     }
 
-    .u-page {
-    }
   }
-
-
 }
 
 
