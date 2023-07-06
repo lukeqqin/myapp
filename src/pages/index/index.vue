@@ -73,7 +73,7 @@
 
 import {computed, ref, watch} from "vue";
 import {useMainStore} from "@/store/myapp";
-import {debounce} from "@/static/js/debounce";
+import debounce from "uview-plus/libs/function/debounce";
 
 const keyword = ref("")
 const mainStore = useMainStore()
@@ -83,9 +83,6 @@ const count = 21345
 // v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
 const paging = ref(null)
 let dataList = ref([])
-// // 给搜索事件 绑定 防抖
-// 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
-const searchInput = debounce(searchEvent, 1200)
 
 const searchVal = ref("")
 watch(keyword, () => {
@@ -94,7 +91,8 @@ watch(keyword, () => {
     if (searchVal.value === keyword.value) {
       return
     }
-    searchInput()
+   // searchInput()
+    debounce(searchEvent, 1200, false)
   }
 
 })

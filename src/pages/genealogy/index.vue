@@ -1,11 +1,19 @@
 <template>
-
   <view class="main">
     <view v-show="empty && columns.length===0">
-      <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png"
+      <u-empty mode="search" icon="http://cdn.uviewui.com/uview/empty/search.png"
                customStyle="margin:auto;top:0;left:0;right:0;bottom:0;position:absolute;">
-        <u-button size="small" type="primary" :style="{marginTop:10+'px'}" text="创建族谱"></u-button>
+        <u-button size="small" type="primary" :style="{marginTop:10+'px'}" text="创建我的族谱"
+                  @click="addGenealogy"></u-button>
       </u-empty>
+      <!--      <view>-->
+      <!--        <u-popup :show="add" @close="close" @open="open" mode="center" customStyle="width:500rpx;" round="5">-->
+      <!--          <view >-->
+      <!--            <u-input placeholder="请输入内容" border="surround" clearable customStyle="margin:0 auto"></u-input>-->
+      <!--          </view>-->
+      <!--        </u-popup>-->
+
+      <!--      </view>-->
     </view>
     <view v-show="empty===false && columns.length!==0">
       <view class="header">
@@ -60,13 +68,14 @@
 
 <script setup>
 
-import {onLoad, onShow} from "@dcloudio/uni-app";
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import {onLoad} from "@dcloudio/uni-app";
+import {reactive, ref, watch} from "vue";
 import {useMainStore} from "@/store/myapp";
-import {debounce} from "@/static/js/debounce";
+import debounce from "uview-plus/libs/function/debounce";
 
 const indexList = ref([])
 let show = ref(false)
+let add = ref(false)
 let empty = ref(false)
 const columns = reactive([])
 const genealogy = ref("")
@@ -79,18 +88,13 @@ const mainStore = useMainStore()
 // v-model绑定的这个变量不要在分页请求结束中自己赋值，直接使用即可
 const paging = ref(null)
 
-// // 给搜索事件 绑定 防抖
-// 因为 ⭐❗⭐❗防抖函数定义 返回的是一个回调函数, 我们可以用一个变量来接收
-const searchInput = debounce(searchEvent, 1200)
-
-
 watch(keyword, () => {
   let len = keyword.value.length
   if (len === 0 || len > 1) {
     if (searchVal.value === keyword.value) {
       return
     }
-    searchInput()
+    debounce(searchEvent, 1200, false)
   }
 })
 
@@ -143,7 +147,8 @@ onLoad(
             if (res.data.Data.length > 0) {
               genealogyId.value = res.data.Data[0].ID
               genealogy.value = res.data.Data[0].Title
-              columns.push(res.data.Data)
+              //columns.push(res.data.Data)
+              empty.value = true
             } else {
               empty.value = true
             }
@@ -170,6 +175,11 @@ function confirm(e) {
   show.value = false
 }
 
+function addGenealogy() {
+  uni.navigateTo({
+    url: "add"
+  })
+}
 
 </script>
 
